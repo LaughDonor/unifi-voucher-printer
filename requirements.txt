@@ -1,0 +1,5 @@
+pillow==9
+brother_ql
+python-dotenv
+unificontrol
+curlify
