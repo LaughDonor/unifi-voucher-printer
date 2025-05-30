@@ -1,86 +1,103 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title>Budget Inn, Longview - Wi-Fi Label</title>
-    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="assets/jquery-ui.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/jquery-ui.theme.min.css">
-    <link rel="stylesheet" type="text/css" href="assets/jquery.mobile-1.4.5.min.css">
+  <head>
+    <title>Budget Motel - Wi-Fi</title>
+    <link rel="icon" type="image/x-icon" href="assets/images/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="stylesheet" type="text/css" href="assets/jquery-ui.min.css" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="assets/jquery-ui.theme.min.css"
+    />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="assets/jquery.mobile-1.4.5.min.css"
+    />
     <script src="assets/jquery.min.js"></script>
     <script src="assets/jquery-ui.min.js"></script>
     <script src="assets/jquery.mobile-1.4.5.min.js"></script>
     <style>
-        body {
-            font-family: sans-serif;
-        }
+      body {
+        font-family: sans-serif;
+      }
 
-        input {
-            width: 100%;
-            margin-bottom: 10px;
-        }
+      input {
+        width: 100%;
+        margin-bottom: 10px;
+      }
 
-        .ui-button {
-            width: 100%;
-            height: 4em;
-            background-color: #003eff;
-            color: white;
-        }
+      .ui-button {
+        width: 100%;
+        height: 4em;
+        background-color: #003eff;
+        color: white;
+      }
     </style>
-</head>
-<body>
-<div data-role="page">
-    <div data-role="header">
-        <h1>Budget Inn Wi-Fi Checkin</h1>
+  </head>
+  <body>
+    <div data-role="page">
+      <div data-role="header">
+        <h2>Budget Motel Wi-Fi Checkin</h2>
+      </div>
+      <div data-role="main" class="ui-content">
+        <label>Room #</label><input type="number" id="input_box" />
+        <label>Checkout: </label><input readonly type="text" id="date_picker" />
+        <button class="ui-button" type="button" id="submit_button">
+          Submit
+        </button>
+      </div>
+      <div data-role="footer">
+        <p>Copyright &copy; 2023-2025</p>
+      </div>
     </div>
-    <div data-role="main" class="ui-content">
-        <label>Room #</label><input type="number" id="input_box"/>
-        <label>Checkout: </label><input readonly type="text" id="date_picker"/>
-        <button class="ui-button" type="button" id="submit_button">Submit</button>
-    </div>
-    <div data-role="footer">
-        <p>Copyright &copy; 2023</p>
-    </div>
-</div>
-<script>
-    function onSubmit() {
+    <script>
+      function onSubmit() {
         const input_value = $("#input_box").val();
         const date_value = $("#date_picker").val();
 
         // Send an Ajax request to the server
-        $("#submit_button").button("disable")
-        $(document.body).css({'cursor': 'wait'});
+        $("#submit_button").button("disable");
+        $(document.body).css({ cursor: "wait" });
         $.ajax({
-            url: "/",
-            type: "POST",
-            data: {
-                room: input_value,
-                checkout: date_value
-            },
-            success: function (response) {
-                $("#input_box, #date_picker").val('')
-            },
-            error: function (_, __, response) {
-                console.log("Error:", response)
-            },
-            complete: function () {
-                $("#submit_button").button("enable")
-                $(document.body).css({'cursor': 'default'});
-            }
+          url: "/",
+          type: "POST",
+          data: {
+            room: input_value,
+            checkout: date_value,
+          },
+          success: function (response) {
+            $("#input_box, #date_picker").val("");
+            $("#submit_button").css("background-color", "");
+          },
+          error: function (ajax, _, response) {
+            const errorColor = ajax.status === 500 ? "#bd4b4b" : "#003eff";
+            $("#submit_button")
+              .stop()
+              .animate({ backgroundColor: errorColor }, 1500);
+            console.error(
+              `Error ${ajax.status} (${response}):`,
+              ajax.responseText
+            );
+          },
+          complete: function () {
+            $("#submit_button").button("enable");
+            $(document.body).css({ cursor: "default" });
+          },
         });
-    }
+      }
 
-    $(document).ready(function () {
+      $(document).ready(function () {
         $("#date_picker").datepicker();
         $("#submit_button").button().click(onSubmit);
-        $('body').keypress(function (e) {
-            if (e.which == 13) {
-                $('form#login').submit();
-                return false;
-            }
+        $("body").keypress(function (e) {
+          if (e.which == 13) {
+            $("form#login").submit();
+            return false;
+          }
         });
-    });
-</script>
-
-</body>
+      });
+    </script>
+  </body>
 </html>

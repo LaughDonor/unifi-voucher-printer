@@ -338,3 +338,6 @@ pyvenv.cfg
 pip-selfcheck.json
 
 # End of https://www.toptal.com/developers/gitignore/api/git,macos,python,virtualenv,jetbrains+iml,sonar,sonarqube
+
+# Custom additions
+label.png
